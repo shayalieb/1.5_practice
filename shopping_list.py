@@ -11,29 +11,52 @@ class ShoppingList:
 
     ##remove an item from the list
     def remove_item(self, item):
-        if item in self.shopping_list:
-            self.shopping_list.remove(item) 
+            try:
+              self.shopping_list.remove(item)
+            except:
+              print("Item not found.")
 
     #view the shopping list
     def view_list(self):
-        for item in self.shopping_list:
-            print(item)                  
+            print("\nItems in " + str(self.list_name) + '\n' + 30*'-')
+            for item in self.shopping_list:
+              print(' - ' + str(item))     
+
+    def merge_lists(self, obj):
+        #Create a name fir the new list
+        merge_lists_name = "Merged list - " + str(self.list_name) + " + " + str(obj.list_name) 
+        #Create empty shopping list object
+        merged_list_obj = ShoppingList(merge_lists_name)
+        # Add the 1st shopping list item contents to our new list
+        merged_list_obj.shopping_list = self.shopping_list.copy()
+        # Adding the second shopping list's items to our new list -
+        # we're doing this so that there won't be any repeated items
+        for item in obj.shopping_list:
+                if not item in merged_list_obj.shopping_list:
+                     merged_list_obj.shopping_list.append(item)
+
+        #return merged items
+        return merged_list_obj             
+
 
 # Pet store shopping list
-pet_store_list = ShoppingList("Pet store shopping list")       
+pet_store_list = ShoppingList("Pet store shopping list")    
+grocery_store_list = ShoppingList('Grocery Store List')   
 
 # List item for pet_store_list
-pet_store_list.add_item("dog food")
-pet_store_list.add_item("frisbee")
-pet_store_list.add_item("bowl")
-pet_store_list.add_item("collars")
-pet_store_list.add_item("flea collars")
+for item in ['Dog food', 'Frisbee', 'Bowl', 'Collars', 'Flea collars']:
+     pet_store_list.add_item(item)
+# List for grocery items
+for item in ['Fruits', 'Veggies', 'Plates', 'Ice pops']:
+     grocery_store_list.add_item(item)     
+
+pet_store_list.merge_lists(grocery_store_list)
 
 # Remove an item from the list
-pet_store_list.remove_item("flea collars")
+# pet_store_list.remove_item("flea collars")
 
 # add a frisbee to the shopping list
-pet_store_list.add_item("frisbee")
-
+# pet_store_list.add_item("frisbee")
+merged_list = ShoppingList.merge_lists(pet_store_list, grocery_store_list)
 #vie the entire list
-pet_store_list.view_list()
+merged_list.view_list()
